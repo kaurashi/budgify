@@ -1,46 +1,34 @@
 const express = require("express");
-const cors =require("cors");
-const app = express();
+const cors = require("cors");
+const dotenv = require("dotenv");
 
-console.log("RUNNING THIS FILE NOW");
+dotenv.config();
+
+const expenseRoutes = require("./routes/expenseRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const aiRoutes = require("./routes/aiRoutes");
+const authRoutes = require("./routes/authRoutes");
+const budgetRoutes = require("./routes/budgetRoutes");
+const patternRoutes = require("./routes/patternRoutes");
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-let expense =[];
+app.use("/", expenseRoutes);
+app.use("/", analyticsRoutes);
+app.use("/", categoryRoutes);
+app.use("/", aiRoutes);
+app.use("/", authRoutes);
+app.use("/", budgetRoutes);
+app.use("/", patternRoutes);
 
-app.get("/", (req, res)=>{
-    res.send("backend is working");
+app.get("/", (req, res) => {
+  res.send("backend is working");
 });
 
-app.post("/add-expense", (req, res) =>{
-    console.log("API HIT");
-    console.log(req.body);
-
-    const  {description, amount} = req.body;
-
- const newExpense ={
-    id: expense.length+1,
-    description,
-    amount: Number(amount)
- };
-
- expense.push(newExpense);
-  
-
-res.json({
-    message:"successfully expense added!",
-    expense:newExpense
-  });
+app.listen(5000, () => {
+  console.log("server running on port 5000!");
 });
-
-app.get("/expense", (req, res)=>{
-    res.json(expense);
-})
-
-app.listen(5000, ()=>{
-    console.log("server running on port 5000!");
-});
-
-
-
