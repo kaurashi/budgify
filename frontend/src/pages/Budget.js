@@ -8,7 +8,7 @@ function Budget() {
     try {
       const token = localStorage.getItem("token"); 
 
-      const response = await fetch("http://localhost:5000/budget", {
+      const response = await fetch("https://budgify-backend-3rko.onrender.com/budget", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

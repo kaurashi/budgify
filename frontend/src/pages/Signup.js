@@ -10,7 +10,7 @@ function Signup() {
 
   const handleSignup = async () => {
 
-    const res = await fetch("http://localhost:5000/signup", {
+    const res = await fetch("https://budgify-backend-3rko.onrender.com/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

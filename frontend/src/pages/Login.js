@@ -10,7 +10,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch("https://budgify-backend-3rko.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

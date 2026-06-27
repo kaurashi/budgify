@@ -14,7 +14,7 @@ function AddExpense({ description, amount, setDescription, setAmount, category, 
           if(value.trim() === "") return;
 
           try{
-             const res= await fetch("http://localhost:5000/predict-category", {
+             const res= await fetch("https://budgify-backend-3rko.onrender.com/predict-category", {
              method:"POST",
              headers : { "Content-Type" : "application/json"},
              body: JSON.stringify({description : value})

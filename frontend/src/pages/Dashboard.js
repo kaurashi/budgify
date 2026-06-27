@@ -27,7 +27,7 @@ function Dashboard() {
 }, [navigate]);
 
   async function getData() {
-    const url = "http://localhost:5000/expense";
+    const url = "https://budgify-backend-3rko.onrender.com/expense";
     try {
       const response = await fetch(url, {
         headers : {
@@ -47,7 +47,7 @@ function Dashboard() {
   useEffect(()=>{
     const fetchAnalytics = async ()=>{
       try{
-        const res = await fetch("http://localhost:5000/analytics",{
+        const res = await fetch("https://budgify-backend-3rko.onrender.com/analytics",{
          headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
          }
@@ -76,7 +76,7 @@ function Dashboard() {
 
     setLoading(true);
 
-    const res = await fetch("http://localhost:5000/ai-insights", {
+    const res = await fetch("https://budgify-backend-3rko.onrender.com/ai-insights", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ function Dashboard() {
 
   const deleteData = async (id) => {
     try {
-      const url = `http://localhost:5000/expense/${id}`;
+      const url = `https://budgify-backend-3rko.onrender.com/expense/${id}`;
       const response = await fetch(url, { 
       method: "DELETE",
       headers: {
@@ -119,7 +119,7 @@ function Dashboard() {
   };
 
   const updateExpenses = async (id, description, amount, category) => {
-    const url = `http://localhost:5000/expense/${id}`;
+    const url = `https://budgify-backend-3rko.onrender.com/expense/${id}`;
     const response = await fetch(url, {
       method: "PUT",
       headers: { "Content-Type": "application/json" ,
@@ -137,7 +137,7 @@ const fetchBudgetAlert = async () => {
   try {
     const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:5000/budget-alert", {
+    const response = await fetch("https://budgify-backend-3rko.onrender.com/budget-alert", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -163,7 +163,7 @@ useEffect(() => {
 
  
 const fetchPatterns = async () => {
-  const res = await fetch("http://localhost:5000/patterns", {
+  const res = await fetch("https://budgify-backend-3rko.onrender.com/patterns", {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`
     }

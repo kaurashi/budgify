@@ -13,7 +13,7 @@ function AddExpensePage() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/add-expense", {
+      const response = await fetch("https://budgify-backend-3rko.onrender.com/add-expense", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
