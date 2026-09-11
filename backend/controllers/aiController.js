@@ -1,7 +1,6 @@
 const OpenAI = require("openai");
 
 const client = new OpenAI({
-  
   apiKey: process.env.GROQ_API_KEY,
   baseURL: "https://api.groq.com/openai/v1",
 });
@@ -16,16 +15,25 @@ const getInsights = async (req, res) => {
       });
     }
 
+    const sanitizedExpenses = expenses.map((e) => ({
+      ...e,
+      amount:
+        typeof e.amount === "string"
+          ? e.amount.replace(/\$/g, "")
+          : e.amount,
+    }));
+
     const completion = await client.chat.completions.create({
       model: "openai/gpt-oss-120b",
       messages: [
         {
           role: "system",
-          content: "You are a financial assistant.",
+          content:
+            "You are a financial assistant for an Indian user. ALL monetary values MUST be written using the Indian Rupee symbol ₹ (e.g. ₹1,200). NEVER use $ or the word 'dollars' under any circumstance. If you are unsure of currency, assume Indian Rupees.",
         },
         {
           role: "user",
-            content: `
+          content: `
 Analyze the following expenses and respond STRICTLY in this format:
 
 📊 INSIGHTS (3 points)
@@ -57,6 +65,10 @@ Suggest one small financial goal based on the user's spending.
 Start with 🎯.
 Keep it under one sentence.
 
+CURRENCY RULE (STRICT):
+- Every amount must be written as ₹ followed by the number, e.g. ₹500, ₹12,000.
+- Do NOT use "$", "USD", or "dollars" anywhere in the response.
+
 RULES:
 - No paragraphs
 - No explanations
@@ -65,19 +77,20 @@ RULES:
 - Keep it very short and dashboard-friendly
 
 EXPENSE DATA:
-${JSON.stringify(expenses)}
+${JSON.stringify(sanitizedExpenses)}
           `,
         },
       ],
       temperature: 0.7,
     });
 
-    const insights = completion.choices[0].message.content;
+    let insights = completion.choices[0].message.content;
+
+    insights = insights.replace(/\$/g, "₹");
 
     return res.json({
       insights,
     });
-
   } catch (error) {
     console.error("Groq Error:", error);
 
