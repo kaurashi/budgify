@@ -4,84 +4,103 @@ import "./Signup.css";
 
 function Signup() {
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState(localStorage.getItem("userEmail") || "");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
+    setLoading(true);
 
-    const res = await fetch("https://budgify-backend-3rko.onrender.com/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password
-      }),
-    });
+    try {
+      const res = await fetch(
+        "https://budgify-backend-3rko.onrender.com/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        }
+      );
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if(res.ok){
-      localStorage.removeItem("userEmail");
-      alert("signup successfully")
-      navigate("/login")
-    }else{
-      alert(data.message);
+      if (res.ok) {
+        localStorage.removeItem("userEmail");
+        alert("signup successfully");
+        navigate("/login");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
- return (
-  <div className="signup-page">
-    <div className="signup-card">
+  return (
+    <div className="signup-page">
+      <div className="signup-card">
 
-      <div className="signup-left">
-        <h1>Create Account</h1>
-        <p>Start tracking your expenses smarter.</p>
+        <div className="signup-left">
+          <h1>Create Account</h1>
+          <p>Start tracking your expenses smarter.</p>
 
-        <input
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+          <input
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button onClick={handleSignup}>
-          Sign Up
-        </button>
+          <button onClick={handleSignup} disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Creating account...
+              </>
+            ) : (
+              "Sign Up"
+            )}
+          </button>
 
-        <p className="login-text">
-          Already have an account?
-          <span onClick={() => navigate("/login")}>
-            Login
-          </span>
-        </p>
-      </div>
-
-      <div className="signup-right">
-        <div>
-          <h2>Budgify AI</h2>
-          <p>Track • Analyze • Improve</p>
+          <p className="login-text">
+            Already have an account?
+            <span onClick={() => navigate("/login")}>
+              Login
+            </span>
+          </p>
         </div>
-      </div>
 
+        <div className="signup-right">
+          <div>
+            <h2>Budgify AI</h2>
+            <p>Track • Analyze • Improve</p>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Signup;

@@ -7,16 +7,22 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
+
     try {
-      const res = await fetch("https://budgify-backend-3rko.onrender.com/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://budgify-backend-3rko.onrender.com/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -24,7 +30,7 @@ function Login() {
         alert(data.message);
         return;
       }
-      
+
       localStorage.clear();
       localStorage.setItem("token", data.token);
 
@@ -32,53 +38,63 @@ function Login() {
 
     } catch (err) {
       console.log(err.message);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-  <div className="login-page">
-    <div className="login-card">
+    <div className="login-page">
+      <div className="login-card">
 
-      <div className="login-left">
-        <h1>Welcome Back</h1>
-        <p>Track expenses smarter with AI insights.</p>
+        <div className="login-left">
+          <h1>Welcome Back</h1>
+          <p>Track expenses smarter with AI insights.</p>
 
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button onClick={handleLogin}>
-          Login
-        </button>
+          <button onClick={handleLogin} disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Logging in...
+              </>
+            ) : (
+              "Login"
+            )}
+          </button>
 
-        <p className="signup-text">
-          Don't have an account?
-          <span onClick={() => navigate("/signup")}>
-            Sign Up
-          </span>
-        </p>
-      </div>
-
-      <div className="login-right">
-        <div>
-          <h2>Budgify</h2>
-          <p>Analyze • Track • Save</p>
+          <p className="signup-text">
+            Don't have an account?
+            <span onClick={() => navigate("/signup")}>
+              Sign Up
+            </span>
+          </p>
         </div>
-      </div>
 
+        <div className="login-right">
+          <div>
+            <h2>Budgify</h2>
+            <p>Analyze • Track • Save</p>
+          </div>
+        </div>
+
+      </div>
     </div>
-  </div>
-);
+  );
 }
 
 export default Login;
